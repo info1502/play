@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gra w szachy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    .form-container {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      margin-top: 20px;
+    }
+
+    #szachownica {
+      display: none;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gra w szachy</h1>
+  <div class="centered">
+    <button id="zagraj-ze-znajomym">Zagraj ze znajomym</button>
+    <button id="z-komputerem">Z komputerem</button>
+    <button id="analiza">Analiza</button>
+  </div>
+
+  <div id="formularz" class="form-container">
+    <h2>Formularz</h2>
+    <label for="kolor">Wybierz kolor:</label>
+    <select id="kolor">
+      <option value="białe">Białe</option>
+      <option value="czarne">Czarne</option>
+    </select>
+
+    <br>
+
+    <label for="czas">Wybierz czas:</label>
+    <select id="czas">
+      <option value="10">10 sekund</option>
+      <option value="15">15 sekund</option>
+      <option value="30">30 sekund</option>
+      <option value="60">1 minuta</option>
+      <option value="180">3 minuty</option>
+      <option value="300">5 minut</option>
+      <option value="600">10 minut</option>
+      <option value="900">15 minut</option>
+      <option value="1800">30 minut</option>
+      <option value="2700">45 minut</option>
+      <option value="3600">60 minut</option>
+      <option value="7200">120 minut</option>
+      <option value="10800">180 minut</option>
+    </select>
+
+    <br>
+
+    <label for="czas-dodatkowy">Czas dodatkowy za ruch:</label>
+    <input type="number" id="czas-dodatkowy" min="0" value="5" step="1">
+
+    <br>
+
+    <button id="rozpocznij">Rozpocznij grę</button>
+  </div>
+
+  <div id="szachownica" class="centered" style="width: 400px; height: 400px;">
+    <!-- Tutaj zostanie wygenerowana szachownica -->
+  </div>
+
+  <script>
+    document.getElementById('zagraj-ze-znajomym').addEventListener('click', function() {
+      showForm();
+    });
+
+    document.getElementById('z-komputerem').addEventListener('click', function() {
+      showForm();
+    });
+
+    document.getElementById('rozpocznij').addEventListener('click', function() {
+      window.location.href = 'strona2.html';
+    });
+
+    document.getElementById('analiza').addEventListener('click', function() {
+      window.location.href = 'strona3.html';
+    });
+
+    function showForm() {
+      document.getElementById('formularz').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
