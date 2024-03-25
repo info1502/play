@@ -20,27 +20,51 @@
       text-align: center;
     }
 
-    .form-container {
-      display: none;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      margin-top: 20px;
-    }
-
-    #szachownica {
-      display: none;
+    .szachownica {
+      display: grid;
+      grid-template-columns: repeat(8, 50px);
+      grid-template-rows: repeat(8, 50px);
+      gap: 1px;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 5px;
       margin-top: 20px;
     }
 
-    .centered {
+    .pole {
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .pole-brazowe {
+      background-color: #8B4513;
+      color: #fff;
+    }
+
+    .pole-jasne {
+      background-color: #f0d9b5;
+    }
+
+    .figura {
+      user-select: none;
+    }
+
+    .selected {
+      border: 2px solid yellow;
+    }
+
+    .movable {
+      background-color: lightgreen;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
     }
 
     button {
@@ -56,85 +80,450 @@
     button:hover {
       background-color: #45a049;
     }
+  </style>
+</head>
+<body>
+  <h1>Gra w szachy</h1>
+  <div class="szachownica">
+    <div class="pole pole-brazowe figura">&#9814;</div>
+    <div class="pole pole-jasne figura">&#9816;</div>
+    <div class="pole pole-brazowe figura">&#9815;</div>
+    <div class="pole pole-jasne figura">&#9813;</div>
+    <div class="pole pole-brazowe figura">&#9812;</div>
+    <div class="pole pole-jasne figura">&#9815;</div>
+    <div class="pole pole-brazowe figura">&#9816;</div>
+    <div class="pole pole-jasne figura">&#9814;</div>
 
-    label {
-      font-weight: bold;
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+
+    <div class="pole pole-jasne figura">&#9820;</div>
+    <div class="pole pole-brazowe figura">&#9822;</div>
+    <div class="pole pole-jasne figura">&#9821;</div>
+    <div class="pole pole-brazowe figura">&#9819;</div>
+    <div class="pole pole-jasne figura">&#9818;</div>
+    <div class="pole pole-brazowe figura">&#9821;</div>
+    <div class="pole pole-jasne figura">&#9822;</div>
+    <div class="pole pole-brazowe figura">&#9820;</div>
+  </div>
+
+  <div class="buttons">
+    <button id="poddaj-sie">Poddaj się</button>
+    <button id="remis">Remis</button>
+    <button id="nieprawidlowy-ruch">Nieprawidłowy ruch</button>
+    <button id="pat">Pat</button>
+    <button id="mat">Mat</button>
+  </div>
+  
+  <div id="zegar-bialy">Czas białego gracza: 00:00</div>
+  <div id="zegar-czarny">Czas czarnego gracza: 00:00</div>
+
+  <script>
+    var selectedFigure = null;
+    var movablePositions = [];
+    var currentPlayer = 'biały';
+
+    // Obsługa zaznaczania figury i zaznaczenia możliwych pól
+    <!DOCTYPE html>
+<html>
+<head>
+  <title>Gra w szachy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
-    input[type="range"] {
-      width: 100%;
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    .szachownica {
+      display: grid;
+      grid-template-columns: repeat(8, 50px);
+      grid-template-rows: repeat(8, 50px);
+      gap: 1px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .pole {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .pole-brazowe {
+      background-color: #8B4513;
+      color: #fff;
+    }
+
+    .pole-jasne {
+      background-color: #f0d9b5;
+    }
+
+    .figura {
+      user-select: none;
+    }
+
+    .selected {
+      border: 2px solid yellow;
+    }
+
+    .movable {
+      background-color: lightgreen;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
   <h1>Gra w szachy</h1>
-  <div class="centered">
-    <button id="zagraj-ze-znajomym">Zagraj ze znajomym</button>
-    <button id="z-komputerem">Z komputerem</button>
-    <button id="analiza">Analiza</button>
+  <div class="szachownica">
+    <div class="pole pole-brazowe figura">&#9814;</div>
+    <div class="pole pole-jasne figura">&#9816;</div>
+    <div class="pole pole-brazowe figura">&#9815;</div>
+    <div class="pole pole-jasne figura">&#9813;</div>
+    <div class="pole pole-brazowe figura">&#9812;</div>
+    <div class="pole pole-jasne figura">&#9815;</div>
+    <div class="pole pole-brazowe figura">&#9816;</div>
+    <div class="pole pole-jasne figura">&#9814;</div>
+
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+    <div class="pole pole-jasne figura">&#9817;</div>
+    <div class="pole pole-brazowe figura">&#9817;</div>
+
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+    <div class="pole pole-jasne"></div>
+    <div class="pole pole-brazowe"></div>
+
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+    <div class="pole pole-brazowe figura">&#9823;</div>
+    <div class="pole pole-jasne figura">&#9823;</div>
+
+    <div class="pole pole-jasne figura">&#9820;</div>
+    <div class="pole pole-brazowe figura">&#9822;</div>
+    <div class="pole pole-jasne figura">&#9821;</div>
+    <div class="pole pole-brazowe figura">&#9819;</div>
+    <div class="pole pole-jasne figura">&#9818;</div>
+    <div class="pole pole-brazowe figura">&#9821;</div>
+    <div class="pole pole-jasne figura">&#9822;</div>
+    <div class="pole pole-brazowe figura">&#9820;</div>
   </div>
 
-  <div id="formularz" class="form-container">
-    <h2>Formularz</h2>
-    <label for="kolor">Wybierz kolor:</label>
-    <select id="kolor">
-      <option value="białe">Białe</option>
-      <option value="czarne">Czarne</option>
-    </select>
-
-    <br>
-
-    <label for="czas">Wybierz czas:</label>
-    <select id="czas">
-      <option value="10">10 sekund</option>
-      <option value="15">15 sekund</option>
-      <option value="30">30 sekund</option>
-      <option value="60">1 minuta</option>
-      <option value="180">3 minuty</option>
-      <option value="300">5 minut</option>
-      <option value="600">10 minut</option>
-      <option value="900">15 minut</option>
-      <option value="1800">30 minut</option>
-      <option value="2700">45 minut</option>
-      <option value="3600">60 minut</option>
-      <option value="7200">120 minut</option>
-      <option value="10800">180 minut</option>
-    </select>
-
-    <br>
-
-    <label for="czas-dodatkowy">Czas dodatkowy za ruch:</label>
-    <input type="number" id="czas-dodatkowy" min="0" value="5" step="1">
-
-    <br>
-
-    <button id="rozpocznij">Rozpocznij grę</button>
+  <div class="buttons">
+    <button id="poddaj-sie">Poddaj się</button>
+    <button id="remis">Remis</button>
+    <button id="nieprawidlowy-ruch">Nieprawidłowy ruch</button>
+    <button id="pat">Pat</button>
+    <button id="mat">Mat</button>
   </div>
-
-  <div id="szachownica" class="centered" style="width: 400px; height: 400px;">
-    <!-- Tutaj zostanie wygenerowana szachownica -->
-  </div>
+  
+  <div id="zegar-bialy">Czas białego gracza: 00:00</div>
+  <div id="zegar-czarny">Czas czarnego gracza: 00:00</div>
 
   <script>
-    document.getElementById('zagraj-ze-znajomym').addEventListener('click', function() {
-      showForm();
-    });
+    var selectedFigure = null;
+    var movablePositions = [];
+    var currentPlayer = 'biały';
 
-    document.getElementById('z-komputerem').addEventListener('click', function() {
-      showForm();
-    });
 
-    document.getElementById('rozpocznij').addEventListener('click', function() {
-      window.location.href = 'strona2.html';
-    });
 
-    document.getElementById('analiza').addEventListener('click', function() {
-      window.location.href = 'strona3.html';
-    });
 
-    function showForm() {
-      document.getElementById('formularz').style.display = 'block';
+    // Przesuwanie zaznaczonej figury na nową pozycję
+    function moveFigure(newPosition) {
+      newPosition.innerHTML = selectedFigure.innerHTML;
+      selectedFigure.innerHTML = '';
+      selectedFigure.classList.remove('selected');
+      selectedFigure.classList.remove(currentPlayer);
+      selectedFigure = null;
+      removeMovablePositions();
     }
+
+    // Przełączanie graczy
+    function switchPlayers() {
+      var zegarBialy = document.getElementById('zegar-bialy');
+      var zegarCzarny = document.getElementById('zegar-czarny');
+
+      if (currentPlayer === 'biały') {
+        currentPlayer = 'czarny';
+        zegarBialy.style.display = 'none';
+        zegarCzarny.style.display = 'block';
+      } else {
+        currentPlayer = 'biały';
+        zegarCzarny.style.display = 'none';
+        zegarBialy.style.display = 'block';
+      }
+    }
+
+    // Obsługa kliknięcia przycisku "Poddaj się"
+    function handleSurrender() {
+      alert('Poddajesz się!');
+    }
+
+    // Obsługa kliknięcia przycisku "Remis"
+    function handleDraw() {
+      alert('Remis!');
+    }
+
+    // Obsługa kliknięcia przycisku "Nieprawidłowy ruch"
+    function handleInvalidMove() {
+      alert('Nieprawidłowy ruch!');
+    }
+
+    // Obsługa kliknięcia przycisku "Pat"
+    function handleStalemate() {
+      alert('Pat!');
+    }
+
+    // Obsługa kliknięcia przycisku "Mat"
+    function handleCheckmate() {
+      alert('Mat!');
+    }
+
+    // Inicjalizacja obsługi zdarzeń
+    function initializeEventHandlers() {
+      var positions = document.getElementsByClassName('pole');
+
+      for (var i = 0; i < positions.length; i++) {
+        positions[i].addEventListener('click', handleFigureSelection);
+      }
+
+      var surrenderButton = document.getElementById('poddaj-sie');
+      surrenderButton.addEventListener('click', handleSurrender);
+
+      var drawButton = document.getElementById('remis');
+      drawButton.addEventListener('click', handleDraw);
+
+      var invalidMoveButton = document.getElementById('nieprawidlowy-ruch');
+      invalidMoveButton.addEventListener('click', handleInvalidMove);
+
+      var stalemateButton = document.getElementById('pat');
+      stalemateButton.addEventListener('click', handleStalemate);
+
+      var checkmateButton = document.getElementById('mat');
+      checkmateButton.addEventListener('click', handleCheckmate);
+    }
+
+    // Inicjalizacja
+    initializeEventHandlers();
+
+
+
+
+    // Obliczanie możliwych pól dla zaznaczonej figury
+    function calculateMovablePositions() {
+      var positions = document.getElementsByClassName('pole');
+      movablePositions = [];
+
+      for (var i = 0; i < positions.length; i++) {
+        if (positions[i].classList.contains('figura')) {
+          continue;
+        }
+
+        movablePositions.push(positions[i]);
+        positions[i].classList.add('movable');
+      }
+    }
+
+    // Usuwanie zaznaczonych możliwych pól
+    function removeMovablePositions() {
+      movablePositions.forEach(function (position) {
+        position.classList.remove('movable');
+      });
+      movablePositions = [];
+    }
+
+    // Przesuwanie zaznaczonej figury na nową pozycję
+    function moveFigure(newPosition) {
+      newPosition.innerHTML = selectedFigure.innerHTML;
+      selectedFigure.innerHTML = '';
+      selectedFigure.classList.remove('selected');
+      selectedFigure.classList.remove(currentPlayer);
+      selectedFigure = null;
+      removeMovablePositions();
+    }
+
+    // Przełączanie graczy
+    function switchPlayers() {
+      var zegarBialy = document.getElementById('zegar-bialy');
+      var zegarCzarny = document.getElementById('zegar-czarny');
+
+      if (currentPlayer === 'biały') {
+        currentPlayer = 'czarny';
+        zegarBialy.style.display = 'none';
+        zegarCzarny.style.display = 'block';
+      } else {
+        currentPlayer = 'biały';
+        zegarCzarny.style.display = 'none';
+        zegarBialy.style.display = 'block';
+      }
+    }
+
+    // Obsługa kliknięcia przycisku "Poddaj się"
+    function handleSurrender() {
+      alert('Poddajesz się!');
+    }
+
+    // Obsługa kliknięcia przycisku "Remis"
+    function handleDraw() {
+      alert('Remis!');
+    }
+
+    // Obsługa kliknięcia przycisku "Nieprawidłowy ruch"
+    function handleInvalidMove() {
+      alert('Nieprawidłowy ruch!');
+    }
+
+    // Obsługa kliknięcia przycisku "Pat"
+    function handleStalemate() {
+      alert('Pat!');
+    }
+
+    // Obsługa kliknięcia przycisku "Mat"
+    function handleCheckmate() {
+      alert('Mat!');
+    }
+
+    // Inicjalizacja obsługi zdarzeń
+    function initializeEventHandlers() {
+  var positions = document.getElementsByClassName('pole');
+
+  for (var i = 0; i < positions.length; i++) {
+    positions[i].addEventListener('click', handleFigureSelection);
+  }
+
+  // ... reszta kodu obsługującego przyciski
+}
+
+
+    // Inicjalizacja
+    initializeEventHandlers();
   </script>
 </body>
 </html>
+
